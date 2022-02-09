@@ -1,0 +1,20 @@
+typedef struct node1
+{
+          int index1;
+          struct node1 *right;
+          struct node *down;
+          struct float_node *Down;
+} Node;
+typedef Node *List;
+
+
+
+void precedence(char_list L, list *array, int count_no);
+Node *reverse_List(List L);
+Node *init(char *str, int cnt, int total_cnt);
+node *addition(list La, list Lb);
+node *subtraction(list La, list Lb);
+node *multiplication(list La, list Lb);
+node *division(list La, list Lb);
+node *modulo(list La, list Lb);
+node *power(list La, list Lb);

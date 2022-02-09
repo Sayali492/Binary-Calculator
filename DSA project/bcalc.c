@@ -3,424 +3,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include "bcalc.h"
+#include "list.h"
+#include "stack.h"
 
-typedef struct node
-{
-          int data;
-          int index;
-          struct node *next;
-
-} node;
-typedef struct node *list;
-
-typedef struct node_char
-{
-          char ch;
-          int index;
-          struct node_char *next;
-
-} node_char;
-typedef node_char *char_list;
-
-typedef struct float_node
-{
-          int data;
-          int index;
-          int deci_index;
-          struct float_node *next;
-} float_node;
-typedef float_node *float_List;
-
-typedef struct node1
-{
-          int index1;
-          int sign;
-          struct node1 *right;
-          struct node *down;
-
-} Node;
-typedef Node *List;
-
-Node *reverse_List(List L)
-{
-          Node *prev = NULL;
-          Node *current = L;
-          Node *p = NULL;
-          while (current != NULL)
-          {
-
-                    p = current->right;
-
-                    current->right = prev;
-
-                    prev = current;
-                    current = p;
-          }
-          L = prev;
-          return L;
-}
-void init_list(list *L)
-{
-          *L = NULL;
-          return;
-}
-void append(list *L, int d)
-{
-          struct node *p;
-          p = *L;
-          if (p == NULL)
-          {
-                    p = (struct node *)malloc(sizeof(struct node));
-                    p->data = d;
-                    p->next = NULL;
-                    *L = p;
-          }
-          else
-          {
-                    while (p->next != NULL)
-                    {
-                              p = p->next;
-                    }
-                    p->next = (struct node *)malloc(sizeof(struct node));
-                    p->next->data = d;
-                    p->next->next = NULL;
-          }
-}
-
-void insert_begin(list *L, int d, int place)
-{
-          int ind = 1;
-          node *q;
-          q = (struct node *)malloc(sizeof(struct node));
-          if (q == NULL)
-                    return;
-          else
-          {
-                    q->data = d;
-                    q->index = place;
-                    q->next = *L;
-                    *L = q;
-
-                    return;
-          }
-}
-node *delete_a_node(list *L, int d, int pos)
-{
-          struct node *p, *q;
-          int count;
-          p = *L;
-          q = NULL;
-          if (p == NULL)
-          {
-                    return *L;
-          }
-          while (p != NULL)
-          {
-                    count++;
-                    p = p->next;
-          }
-          p = *L;
-          if (count == 1)
-          {
-
-                    while (p && p->data != d)
-                    {
-                              q = p;
-                              p = p->next;
-                    }
-                    if (p != NULL)
-                    {
-                              *L = NULL;
-                              free(p);
-                    }
-                    else
-                    {
-                              return *L;
-                    }
-          }
-          if (count > 1 && pos == 1)
-          {
-                    while (p && p->data != d)
-                    {
-                              q = p;
-                              p = p->next;
-                    }
-                    if (p != NULL)
-                    {
-                              *L = p->next;
-                              free(p);
-                    }
-                    else
-                    {
-                              return *L;
-                    }
-          }
-          else if (count > 1 && pos != 1)
-          {
-                    while (p && p->data != d)
-                    {
-                              q = p;
-                              p = p->next;
-                    }
-                    if (p != NULL)
-                    {
-                              q->next = p->next;
-                              free(p);
-                    }
-                    else
-                    {
-                              return *L;
-                    }
-          }
-          return *L;
-}
-node_char *delete_a_charnode(char_list *L, char d, int pos)
-{
-          node_char *p, *q;
-          int count;
-          p = *L;
-          q = NULL;
-          if (p == NULL)
-          {
-                    return *L;
-          }
-          while (p != NULL)
-          {
-                    count++;
-                    p = p->next;
-          }
-          p = *L;
-          if (count == 1)
-          {
-
-                    while (p && p->ch != d)
-                    {
-                              q = p;
-                              p = p->next;
-                    }
-                    if (p != NULL)
-                    {
-                              *L = NULL;
-                              free(p);
-                    }
-                    else
-                    {
-                              return *L;
-                    }
-          }
-          if (count > 1 && pos == 1)
-          {
-                    while (p && p->ch != d)
-                    {
-                              q = p;
-                              p = p->next;
-                    }
-                    if (p != NULL)
-                    {
-                              *L = p->next;
-                              free(p);
-                    }
-                    else
-                    {
-                              return *L;
-                    }
-          }
-          else if (count > 1 && pos != 1)
-          {
-                    while (p && p->ch != d)
-                    {
-                              q = p;
-                              p = p->next;
-                    }
-                    if (p != NULL)
-                    {
-                              q->next = p->next;
-                              free(p);
-                    }
-                    else
-                    {
-                              return *L;
-                    }
-          }
-          return *L;
-}
-
-node *reverse_list(list *L)
-{
-          struct node *prev = NULL;
-          struct node *current = *L;
-          struct node *p = NULL;
-          while (current != NULL)
-          {
-
-                    p = current->next;
-
-                    current->next = prev;
-
-                    prev = current;
-                    current = p;
-          }
-          *L = prev;
-          return *L;
-}
-void destroy_List(list L)
-{
-          /* deref head_ref to get the real head */
-          node *p = L;
-          node *q;
-
-          while (p != NULL)
-          {
-                    L = p->next;
-                    q = p;
-                    p = p->next;
-                    q->next = NULL;
-                    //        q = p->next;
-                    //        free(p);
-                    //        p = q;
-          }
-          p = L;
-          p->next = NULL;
-          L = NULL;
-}
-void print_nodes(struct node *L)
-{
-          struct node *p;
-          p = L;
-          if (L == NULL)
-                    printf("List is Empty");
-          while (p != NULL)
-          {
-                    printf("%d %d\n", p->data, p->index);
-                    p = p->next;
-          }
-          printf("\n");
-}
-// stack using array
-typedef struct stack
-{
-          int size;
-          int top;
-          int *A;
-
-} stack;
-void init_stack(stack *S, int s)
-{
-          S->size = s;
-          S->top = -1;
-          S->A = (int *)malloc(sizeof(int) * s);
-          return;
-}
-
-int is_stack_empty(stack S)
-{
-          if (S.top == -1)
-                    return 1;
-          else
-                    return 0;
-}
-int is_stack_full(stack S)
-{
-          if (S.top == S.size - 1)
-                    return 1;
-          else
-                    return 0;
-}
-void push(stack *S, int d)
-{
-          if (S->top == -1)
-          {
-                    S->top++;
-                    S->A[S->top] = d;
-                    return;
-          }
-          else if (is_stack_full(*S))
-                    return;
-          else
-          {
-                    S->top++;
-                    S->A[S->top] = d;
-                    return;
-          }
-}
-
-int pop(stack *S)
-
-{
-          long int num;
-          num = INT_MIN;
-          if (is_stack_empty(*S))
-                    return num;
-          else
-          {
-
-                    int x;
-                    x = S->A[S->top];
-                    S->top--;
-                    return x;
-          }
-}
-
-int peak(stack S)
-{
-          long int num;
-          num = INT_MIN;
-          if (is_stack_empty(S))
-                    return num;
-          else
-          {
-                    int x;
-                    x = S.A[S.top];
-
-                    return x;
-          }
-}
-
-int compare_lists(list La, list Lb)
-{
-          int cnt1 = 0, cnt2 = 0, res = 0;
-          node *p, *q;
-          p = La;
-          q = Lb;
-          while (p->next != NULL)
-          {
-                    p = p->next;
-          }
-          cnt1 = p->index;
-          while (q->next != NULL)
-          {
-                    q = q->next;
-          }
-          cnt2 = q->index;
-          p = La;
-          q = Lb;
-          if (cnt1 > cnt2)
-                    return 1;
-          if (cnt2 > cnt1)
-                    return 2;
-          if (cnt1 == cnt2)
-          {
-                    while (p != NULL)
-                    {
-                              if (p->data > q->data)
-                              {
-                                        res = 1;
-                                        p = NULL;
-                              }
-                              else if (p->data < q->data)
-                              {
-                                        res = 2;
-                                        p = NULL;
-                              }
-                              else
-                              {
-                                        p = p->next;
-                                        q = q->next;
-                              }
-                    }
-          }
-          return res;
-}
 void precedence(char_list L, list *array, int count_no)
 {
           node_char *p;
@@ -515,119 +101,122 @@ void precedence(char_list L, list *array, int count_no)
                     }
                     p = p->next;
           }
-          // for(i=0;i<count_no;i++){
-          //           printf("%d\n",array[i]);
-          // }
 }
-
-node *remove_trailing_zeroes(list *L)
+Node *reverse_List(List L)
 {
-
-          node *p, *q, *r, *reverse, *final;
-          p = *L;
-          reverse = reverse_list(&p);
-          q = reverse;
-          while (q->data == 0)
+          Node *prev = NULL;
+          Node *current = L;
+          Node *p = NULL;
+          while (current != NULL)
           {
-                    r = q;
-                    reverse = q->next;
-                    q = q->next;
-                    r->next = NULL;
+
+                    p = current->right;
+
+                    current->right = prev;
+
+                    prev = current;
+                    current = p;
           }
-          final = reverse_list(&reverse);
-          return final;
+          L = prev;
+          return L;
 }
 
-int display_num_int(list L)
+Node *init(char *str, int cnt, int total_cnt)
 {
-          int num = 0;
+          List L;
+          L = NULL;
+          Node *q;
+
           node *p;
-          p = L;
-          while (p != NULL)
+
+          int i = 0, ind = 0, num = 0, j = 0, index_for_newlist = 0, decimal, sign = 0;
+
+          list L1;
+
+          init_list(&L1);
+          stack S1;
+          init_stack(&S1, 1000);
+
+          while (i < total_cnt)
           {
-                    num = num + p->data * (pow(10, p->index));
-                    p = p->next;
-          }
-          return num;
-}
-void display_num(list L)
-{
+                    // if (str[i] == '(')
+                    // {
+                    //           i++;
+                    //           if (str[i] == '-')
+                    //           {
+                    //                     sign = 1;
+                    //                     i++;
+                    //           }
+                    // }
 
-          node *res;
-          int i = 0;
-          res = reverse_list(&L);
-          while (res != NULL)
-          {
-                    printf("%d", res->data);
-                    res = res->next;
-          }
-}
-void display_New_List(List L)
-{
-
-          Node *p, *res;
-
-          node *q;
-          p = L;
-
-          while (p != NULL)
-          {
-                    // printf("Index1 %d\n", p->index1);
-                    q = p->down;
-                    while (q != NULL)
+                    if (str[i] >= '0' && str[i] <= '9')
                     {
-                              printf("%d\n", q->data);
-                              q = q->next;
+                              while (str[i] >= '0' && str[i] <= '9')
+                              {
+                                        // if (sign == 0)
+                                        // {
+
+                                        push(&S1, str[i] - '0');
+
+                                        i++;
+                                        // }
+                                        // else
+                                        // {
+                                        //           num = str[i] - '0';
+                                        //           num = -(num);
+                                        //           push(&S1, num);
+                                        //           i++;
+                                        //           sign = 0;
+                                        // }
+                              }
+                              if (L == NULL)
+                              {
+                                        L = (Node *)malloc(sizeof(Node));
+                                        q = L;
+                                        L->right = NULL;
+                                        L->index1 = index_for_newlist;
+                                        index_for_newlist++;
+                                        L->down = (node *)malloc(sizeof(node));
+                                        p = L->down;
+                                        p->data = pop(&S1);
+                                        p->index = ind;
+                                        ind++;
+                                        p->next = NULL;
+                              }
+                              else
+                              {
+                                        q->right = (Node *)malloc(sizeof(Node));
+                                        q = q->right;
+                                        q->right = NULL;
+                                        q->index1 = index_for_newlist;
+                                        index_for_newlist++;
+                                        q->down = (node *)malloc(sizeof(node));
+                                        p = q->down;
+                                        p->data = pop(&S1);
+                                        p->index = ind;
+                                        ind++;
+                                        p->next = NULL;
+                              }
+
+                              while (!(is_stack_empty(S1)))
+                              {
+
+                                        p->next = (node *)malloc(sizeof(node));
+                                        p = p->next;
+                                        p->data = pop(&S1);
+                                        p->index = ind;
+                                        ind++;
+                                        p->next = NULL;
+                              }
                     }
-                    printf("\n");
-                    p = p->right;
+
+                    ind = 0;
+
+                    i++;
           }
+
+          return L;
 }
-
-// node *init(char *str, int cnt, int total_cnt)
-// {
-//           int i = 0, ind = 0, k = 0, j = 0;
-//           list arr[cnt + 1];
-//           int op_arr[cnt];
-//           list L1;
-//           init_list(&L1);
-//           stack S1;
-//           init_stack(&S1, 1000);
-//           char op[50];
-
-//           while (i < total_cnt)
-//           {
-//                     while (str[i] >= '0' && str[i] <= '9')
-//                     {
-//                               push(&S1, str[i] - '0');
-//                               i++;
-//                     }
-//                     arr[k] = (node *)malloc(sizeof(node));
-//                     arr[k]->data = pop(&S1);
-//                     arr[k]->index = ind;
-//                     ind++;
-//                     arr[k]->next = NULL;
-//                     node *p;
-//                     p = arr[k];
-//                     while (!(is_stack_empty(S1)))
-//                     {
-
-//                               p->next = (node *)malloc(sizeof(node));
-//                               p = p->next;
-//                               p->data = pop(&S1);
-//                               p->index = ind;
-//                               ind++;
-//                               p->next = NULL;
-//                     }
-//                     ind = 0;
-//                     op[j] = str[i];
-//                     j++;
-//                     k++;
-
-//                     i++;
-//           }
-//           return *arr;
-// }
 
 node *addition(list La, list Lb)
 {
@@ -858,8 +447,8 @@ node *subtraction(list La, list Lb)
           struct node *p, *q, *r, **ptr, *res, *result;
 
           int num1, num2, i = 0, count = 0, diff, borrow = 0, cnt1 = 0, cnt2 = 0, comp;
-          // num1 = display_num_int(La);
-          // num2 = display_num_int(Lb);
+          num1 = display_num_int(La);
+          num2 = display_num_int(Lb);
           list P3;
           init_list(&P3);
           comp = compare_lists(La, Lb);
@@ -1083,14 +672,7 @@ node *subtraction(list La, list Lb)
                               }
                               r->data = -(r->data);
                     }
-                    // if (comp == 0)
-                    // {
-                    //           result = (node *)malloc(sizeof(node));
-                    //           result->data = 0;
-                    //           result->index = 0;
-                    //           result->next = NULL;
-                    //           return result;
-                    // }
+
                     r = res;
                     return res;
           }
@@ -1319,10 +901,10 @@ node *multiplication(list La, list Lb)
 node *division(list La, list Lb)
 {
           node *p, *q, *r, *s, *t, *u, *v, *z, *L1, *L2, *multi, *diff, *result;
-          int i = 9, comp, ind = 0, cnt = 0;
+          int i = 9, comp, ind, cnt = 0;
 
           L1 = reverse_list(&La);
-          printf("hi1\n");
+
           p = L1;
 
           list L3, L, L4, res;
@@ -1346,11 +928,12 @@ node *division(list La, list Lb)
 
                               if (L3 == NULL)
                               {
-
+                                        ind = 0;
                                         L3 = (node *)malloc(sizeof(node));
                                         L3->data = p->data;
-                                        L3->index = 0;
+                                        L3->index = ind;
                                         L3->next = NULL;
+                                        ind++;
                               }
                               else
                               {
@@ -1361,8 +944,8 @@ node *division(list La, list Lb)
                                         q = q->next;
                                         while (q != NULL)
                                         {
-                                                  q->index = ind + 1;
-                                                  ind = q->index;
+                                                  q->index = ind;
+                                                  ind++;
                                                   q = q->next;
                                         }
                               }
@@ -1371,9 +954,9 @@ node *division(list La, list Lb)
                     }
 
                     multi = multiplication(Lb, L);
-                    printf("hi2\n");
+
                     diff = subtraction(L4, multi);
-                    printf("hi3\n");
+
                     r = diff;
                     while (r != NULL)
                     {
@@ -1393,7 +976,6 @@ node *division(list La, list Lb)
                                         res->data = i;
                                         res->index = 0;
                                         res->next = NULL;
-                                        printf("hi4\n");
                               }
                               else
 
@@ -1407,13 +989,12 @@ node *division(list La, list Lb)
 
                                         v->next = (node *)malloc(sizeof(node));
                                         ind = v->index;
-
+                                        ind++;
                                         v = v->next;
                                         v->data = i;
-                                        v->index = ind + 1;
-
+                                        v->index = ind;
+                                        ind++;
                                         v->next = NULL;
-                                        printf("hi5\n");
                               }
 
                               L3 = NULL;
@@ -1433,7 +1014,6 @@ node *division(list La, list Lb)
 
                                         p = p->next;
                               }
-                              printf("hi6\n");
                     }
           }
 
@@ -1454,7 +1034,7 @@ node *division(list La, list Lb)
                     }
                     else
                     {
-                              p = p->next;
+                              p = NULL;
                     }
           }
 
@@ -1485,19 +1065,20 @@ node *division(list La, list Lb)
                     p = result;
                     p->index = 0;
                     ind = 0;
-
+                    ind++;
                     p = p->next;
                     while (p != NULL)
                     {
 
-                              p->index = ind + 1;
-                              ind = p->index;
+                              p->index = ind;
+                              ind++;
                               p = p->next;
                     }
 
                     return result;
           }
 }
+
 node *modulo(list La, list Lb)
 {
           node *p, *q, *r, *s, *t, *u, *v, *z, *L1, *L2, *multi, *diff, *result;
@@ -1646,11 +1227,9 @@ node *evaluation(char *str, int cnt, int total_cnt, List L)
           node_char *p, *q, *r, *t, *x;
 
           int i = 0, j = 0, ind = 0, k = 0;
-          // sign[cnt-1];
 
           while (i < total_cnt)
           {
-
                     if (str[i] == '(')
                     {
 
@@ -1804,12 +1383,6 @@ node *evaluation(char *str, int cnt, int total_cnt, List L)
                                                   }
                                                   res->data = -(res->data);
                                         }
-                                        // else if(ptr1->sign==1 && ptr2->sign!=1){
-                                        //           result=subtraction(ptr1->down,ptr2->down);
-                                        // }
-                                        // else if(ptr1->sign!=1 && ptr2->sign==1){
-                                        //           result=subtraction(ptr1->down,ptr2->down);
-                                        // }
                                         else
                                         {
                                                   if (ptr1->sign == 1)
@@ -2185,24 +1758,6 @@ node *evaluation(char *str, int cnt, int total_cnt, List L)
                                         {
                                                   ptr2 = ptr2->right;
                                         }
-                                        if (ptr1->sign == 1)
-                                        {
-                                                  a = ptr1->down;
-                                                  while (a->next != NULL)
-                                                  {
-                                                            a = a->next;
-                                                  }
-                                                  a->data = -(a->data);
-                                        }
-                                        if (ptr2->sign == 1)
-                                        {
-                                                  b = ptr2->down;
-                                                  while (b->next != NULL)
-                                                  {
-                                                            b = b->next;
-                                                  }
-                                                  b->data = -(b->data);
-                                        }
                                         result = division(ptr1->down, ptr2->down);
 
                                         ptr1->down = NULL;
@@ -2284,9 +1839,8 @@ node *evaluation(char *str, int cnt, int total_cnt, List L)
                                                   max = -1;
                                         else
                                         {
-
-                                                  s = op_arr;
                                                   ind = 0;
+                                                  s = op_arr;
                                                   while (s != NULL)
                                                   {
 
@@ -2304,24 +1858,6 @@ node *evaluation(char *str, int cnt, int total_cnt, List L)
                                         while (ptr2->index1 != i + 1)
                                         {
                                                   ptr2 = ptr2->right;
-                                        }
-                                        if (ptr1->sign == 1)
-                                        {
-                                                  a = ptr1->down;
-                                                  while (a->next != NULL)
-                                                  {
-                                                            a = a->next;
-                                                  }
-                                                  a->data = -(a->data);
-                                        }
-                                        if (ptr2->sign == 1)
-                                        {
-                                                  b = ptr2->down;
-                                                  while (b->next != NULL)
-                                                  {
-                                                            b = b->next;
-                                                  }
-                                                  b->data = -(b->data);
                                         }
                                         result = power(ptr1->down, ptr2->down);
                                         ptr1->down = NULL;
@@ -2561,108 +2097,9 @@ node *evaluation(char *str, int cnt, int total_cnt, List L)
           return L->down;
 }
 
-Node *init(char *str, int cnt, int total_cnt)
-{
-          List L;
-          L = NULL;
-          Node *q;
-
-          node *p;
-
-          int i = 0, ind = 0, k = 0, j = 0, index_for_newlist = 0, sign = 0, num;
-
-          list L1;
-
-          init_list(&L1);
-          stack S1;
-          init_stack(&S1, 1000);
-
-          while (i < total_cnt)
-          {
-                    // if (str[i] == '-' || str[i]=='(')
-                    // {
-                    //           if (i == 0)
-                    //           {
-                    //                     sign = 1;
-                    //                     i++;
-                    //           }
-                    //           if(str[i+1]=='-'){
-                    //                     sign=1;
-                    //                     i++;
-                    //           }
-                    // }
-                    if (str[i] >= '0' && str[i] <= '9')
-                    {
-                              while (str[i] >= '0' && str[i] <= '9')
-                              {
-                                        // if (sign == 0)
-                                        // {
-
-                                        push(&S1, str[i] - '0');
-
-                                        i++;
-                                        // }
-                                        // else{
-                                        //           num=str[i] -'0';
-                                        //           num=-(num);
-                                        //           printf("%d",num);
-                                        //           push(&S1,num);
-                                        //           i++;
-                                        //           sign=0;
-                                        // }
-                              }
-                              if (L == NULL)
-                              {
-                                        L = (Node *)malloc(sizeof(Node));
-                                        q = L;
-                                        L->right = NULL;
-                                        L->index1 = index_for_newlist;
-                                        index_for_newlist++;
-                                        L->down = (node *)malloc(sizeof(node));
-                                        p = L->down;
-                                        p->data = pop(&S1);
-                                        p->index = ind;
-                                        ind++;
-                                        p->next = NULL;
-                              }
-                              else
-                              {
-                                        q->right = (Node *)malloc(sizeof(Node));
-                                        q = q->right;
-                                        q->right = NULL;
-                                        q->index1 = index_for_newlist;
-                                        index_for_newlist++;
-                                        q->down = (node *)malloc(sizeof(node));
-                                        p = q->down;
-                                        p->data = pop(&S1);
-                                        p->index = ind;
-                                        ind++;
-                                        p->next = NULL;
-                              }
-
-                              while (!(is_stack_empty(S1)))
-                              {
-
-                                        p->next = (node *)malloc(sizeof(node));
-                                        p = p->next;
-                                        p->data = pop(&S1);
-                                        p->index = ind;
-                                        ind++;
-                                        p->next = NULL;
-                              }
-                    }
-
-                    ind = 0;
-
-                    i++;
-          }
-          // printf("ho\n");
-
-          return L;
-}
 int find_error(char *str, int total_cnt)
 {
-          int i = 0, brac_cnt1 = 0,brac_cnt2=0;
+          int i = 0, brac_cnt1 = 0, brac_cnt2 = 0;
           while (i < total_cnt)
           {
                     if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '%' || str[i] == '^')
@@ -2693,64 +2130,16 @@ int find_error(char *str, int total_cnt)
                               brac_cnt2++;
                               i++;
                     }
+                    else if (str[i]=='q'){
+                              return 0;
+                    }
                     else
                     {
                               return 1;
                     }
           }
-          if (brac_cnt1==brac_cnt2)
+          if (brac_cnt1 == brac_cnt2)
                     return 0;
-          else return 1;
-}
-
-int main()
-{
-          list L1;
-          List L2;
-          Node *ptr, *res;
-          node *rev;
-          int decimal = 0, i = 0, count = 0, total_count = 0, error = 0;
-          char ch = 'a';
-          char str[100];
-          // while (str[i] != 'q')
-          // {
-
-          scanf("%s", str);
-          // if (str[i] == 'q')
-          //           return 0;
-          // switch (ch)
-          // {
-          // case 'q':
-          //           break;
-          // default:
-
-          while (str[i] != '\0')
-          {
-                    if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '%' || str[i] == '^')
-                    {
-                              count++;
-                    }
-                    total_count++;
-                    i++;
-          }
-          // printf("%d %d\n", count, total_count);
-          error = find_error(str, total_count);
-          if (error == 1)
-          {
-                    printf("Invalid Input");
-          }
           else
-          {
-                    ptr = init(str, count, total_count);
-
-                    rev = evaluation(str, count, total_count, ptr);
-
-                    display_num(rev);
-                    printf("\n");
-                    printf("\n");
-          }
-
-          // }
-
-          return 0;
+                    return 1;
 }

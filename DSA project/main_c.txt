@@ -1,0 +1,49 @@
+main.c
+
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+int main()
+{
+          list L1;
+          List L2;
+          Node *ptr, *res;
+          node *rev;
+          int decimal = 0, i = 0, count = 0, total_count = 0, error = 0;
+          char ch = 'a';
+          char str[100];
+          // while (ch != 'q')
+          // {
+          scanf("%s", str);
+          // switch (ch)
+          // {
+          // case 'q':
+          //           break;
+          // default:
+
+          while (str[i] != '\0')
+          {
+                    if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '%' || str[i] == '^')
+                    {
+                              count++;
+                    }
+                    total_count++;
+                    i++;
+          }
+
+
+          ptr = initt(str, count, total_count);
+          
+          rev = evaluation(str, count, total_count, ptr);
+
+          
+          display_num(rev);
+          printf("\n");
+
+          
+
+          return 0;
+}
